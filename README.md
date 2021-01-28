@@ -68,6 +68,18 @@ maven_install(
 )
 ```
 
+### Kotlin
+
+Follow the directions at [`bazelbuild/rules_kotlin`](https://github.com/bazelbuild/rules_kotlin) to setup the Kotlin toolchain. At the time of this writing, that is:
+
+```bzl
+# add the `bazelbuild/rules_kotlin` repo to your WORKSPACE, and then...
+
+load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kotlin_repositories", "kt_register_toolchains")
+kotlin_repositories()
+kt_register_toolchains()
+```
+
 ### Scala
 
 ```bzl
@@ -166,6 +178,44 @@ public class BrowserTest {
    }
 
   // your tests here
+}
+```
+
+### Example Kotlin Test
+
+```kotlin
+package javatests.kotlinsample
+
+import com.google.testing.web.WebTest
+import org.openqa.selenium.WebDriver
+
+import org.junit.Test as test
+import org.junit.After as after
+import org.junit.Before as before
+
+
+class SomeTest {
+  private var driver: WebDriver? = null
+
+  @before
+  fun createDriver() {
+    driver = WebTest().newWebDriverSession()
+  }
+
+  @after
+  fun quitDriver() {
+    try {
+      driver!!.quit()
+    } finally {
+      driver = null
+    }
+  }
+
+  @test
+  fun testWebDriverFromKotlin() {
+    val wt = WebTest()
+    driver?.get(wt.HTTPAddress().resolve("/healthz").toString())
+  }
 }
 ```
 
