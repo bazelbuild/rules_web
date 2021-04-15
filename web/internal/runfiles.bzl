@@ -25,27 +25,25 @@ def _collect(ctx, files = [], targets = []):
         A configured runfiles object that include data and default runfiles for the
         rule, all transitive runfiles from targets, and all files from files.
     """
-    transitive_runfiles = depset()
-    dep_files = depset()
+    transitive_runfiles_list = []
     default_runfiles = []
     data_runfiles = []
-
     for target in targets:
         if hasattr(target, "transitive_runfiles"):
-            transitive_runfiles = depset(
-                transitive = [transitive_runfiles, target.transitive_runfiles],
-            )
+            transitive_runfiles_list.extend(target.transitive_runfiles)
         if hasattr(target, "default_runfiles"):
-            default_runfiles += [target.default_runfiles]
+            default_runfiles.append(target.default_runfiles)
         if hasattr(target, "data_runfiles"):
-            data_runfiles += [target.data_runfiles]
+            data_runfiles.append(target.data_runfiles)
         if hasattr(target, "files"):
-            dep_files = depset(transitive = [dep_files, target.files])
+            transitive_runfiles_list.append(target.files)
+
+    transitive_runfiles = depset(transitive = transitive_runfiles_list)
 
     result = ctx.runfiles(
         collect_data = True,
         collect_default = True,
-        files = files + dep_files.to_list(),
+        files = files,
         transitive_files = transitive_runfiles,
     )
 
