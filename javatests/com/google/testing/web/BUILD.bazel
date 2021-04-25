@@ -15,6 +15,7 @@
 ################################################################################
 #
 load("//web:java.bzl", "java_web_test_suite")
+load("//web:kotlin.bzl", "kotlin_web_test_suite")
 
 licenses(["notice"])  # Apache 2.0
 
@@ -32,4 +33,21 @@ java_web_test_suite(
         "@junit_junit",
         "@org_seleniumhq_selenium_selenium_api",
     ],
+)
+
+kotlin_web_test_suite(
+    name = "WebKotlinTest",
+    srcs = ["WebKotlinTest.kt"],
+    test_class = "com.google.testing.web.WebKotlinTest",
+    browsers = [
+        "//browsers:chromium-local",
+        "//browsers:firefox-local",
+        "//browsers/sauce:chrome-win10",
+        "//browsers/sauce:chrome-win10-connect",
+    ],
+    deps = [
+        "//java/com/google/testing/web",
+        "@junit_junit",
+        "@org_seleniumhq_selenium_selenium_api",
+    ]
 )

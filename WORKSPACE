@@ -92,3 +92,17 @@ scala_repositories()
 load("@io_bazel_rules_scala//scala:toolchains.bzl", "scala_register_toolchains")
 
 scala_register_toolchains()
+
+rules_kotlin_version = "4512a83053489326a3643ef9d84e3e15420eb58e"
+rules_kotlin_sha = "5108e1fa0ac9012a92e7a5825562284fa756f469b80020d0cd7fa03c44f6bb20"
+http_archive(
+    name = "io_bazel_rules_kotlin",
+    urls = ["https://github.com/bazelbuild/rules_kotlin/archive/%s.zip" % rules_kotlin_version],
+    type = "zip",
+    strip_prefix = "rules_kotlin-%s" % rules_kotlin_version,
+    sha256 = rules_kotlin_sha,
+)
+
+load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kotlin_repositories", "kt_register_toolchains")
+kotlin_repositories()
+kt_register_toolchains()
